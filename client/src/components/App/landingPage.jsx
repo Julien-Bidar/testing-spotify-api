@@ -122,7 +122,7 @@ const Title = styled.h1`
 
 const LoginText = styled(Title)`
   text-align: center;
-  font-size: 14px;
+  font-size: 16px;
   margin-top: 120px;
   font-weight: 400;
 `;

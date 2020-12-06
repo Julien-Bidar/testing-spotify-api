@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import {
   // receiveAlbums,
@@ -19,11 +20,11 @@ const Search = () => {
   };
 
   const handleclick = () => {
-    search();
+    searchTrack();
     //setValue("");
   };
 
-  const search = async () => {
+  const searchTrack = async () => {
     dispatch(searchRequest());
     const options = {
       headers: { Authorization: `Bearer ${accessToken}` },
@@ -43,12 +44,14 @@ const Search = () => {
   };
 
   return (
-    <>
+    <Wrapper>
       <input type="text" value={value} onChange={handleChange} />
       <button onClick={handleclick}>search</button>
       <SearchResult />
-    </>
+    </Wrapper>
   );
 };
+
+const Wrapper = styled.div``;
 
 export default Search;

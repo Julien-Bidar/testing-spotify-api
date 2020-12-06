@@ -11,7 +11,7 @@ const Player = () => {
   }
   return (
     <SpotifyPlayer
-      name="final project"
+      name="Rooms"
       token={accessToken}
       showSaveIcon={true}
       uris={item?.uri}

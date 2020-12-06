@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 
-const Header = () => {
+const RoomHeader = () => {
   const imgSrc = useSelector((state) => state.users.information.imageSrc);
   return (
     <Wrapper>
@@ -40,4 +40,4 @@ const Avatar = styled.img`
   width: auto;
 `;
 
-export default Header;
+export default RoomHeader;
