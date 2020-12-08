@@ -1,94 +1,80 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import queryString from "query-string";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { FaSpotify } from "react-icons/fa";
 import { IconContext } from "react-icons";
 import styled from "styled-components";
 import {
-  receiveAccessToken,
-  receiveAccessTokenError,
-  requestAccessToken,
-} from "../../redux/actions/authActions";
-import {
   receiveMainUserProfile,
   receiveUserProfileError,
+  receiveUsersProfile,
   requestUsersInfo,
 } from "../../redux/actions/usersActions";
+import {
+  receiveAccessToken,
+  receiveAccessTokenError,
+} from "../../redux/actions/authActions";
 
 const LandingPage = () => {
   const dispatch = useDispatch();
-  const accessToken = useSelector((state) => state.auth.token);
-  const [gotToken, setGotToken] = useState(false);
-  const token = useSelector((state) => state.auth.token);
-  console.log(gotToken);
-
-  //----------------------------------user authorization process--------------------//
-  const authorize = () => {
-    window.location = `http://localhost:5678/login`;
-  };
-  const parsed = queryString.parse(window.location.search);
-  let code;
-  if (parsed) {
-    code = parsed.code;
-  }
-
-  //------------------------------getting the access token and setting it to the store----------------------//
-  useEffect(() => {
-    dispatch(requestAccessToken());
-    fetch("/spotify_access_token", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ code: code }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        if (!data.error) {
-          setGotToken(true);
-          dispatch(receiveAccessToken(data));
-        } else {
-          setGotToken(false);
-          dispatch(receiveAccessTokenError());
-        }
-      })
-      .catch((err) => {
-        dispatch(receiveAccessTokenError());
-      });
-  }, []);
 
   //fetching the main user data
-
   const fetchMainUserData = async () => {
-    dispatch(requestUsersInfo());
-    const options = {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    };
     try {
-      console.log("fetching user's data");
-      const request = await fetch("https://api.spotify.com/v1/me", options);
-      const data = await request.json();
+      dispatch(requestUsersInfo());
+      const fetchUser = await fetch("/me");
+      const response = await fetchUser.json();
+      const data = response.me.body;
       dispatch(receiveMainUserProfile(data));
+      //add user to db
+      const dbReq = await fetch("/adduser", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ data: data }),
+      });
+      const dbRes = await dbReq.json();
+      console.log(dbRes);
     } catch (err) {
       dispatch(receiveUserProfileError());
     }
   };
 
-  // useEffect(() => {
-  //   fetchMainUserData();
-  // }, [gotToken, setGotToken]);
+  //get all users
+  const getAllUsers = async () => {
+    const getUsers = await fetch("/getallusers");
+    const users = await getUsers.json();
+    dispatch(receiveUsersProfile(users.data));
+  };
+
+  //get token
+  const getToken = async () => {
+    try {
+      const req = await fetch("/token");
+      const token = await req.json();
+      dispatch(receiveAccessToken(token.accessToken));
+    } catch (err) {
+      console.log(err);
+      dispatch(receiveAccessTokenError());
+    }
+  };
 
   return (
     <Wrapper>
       <Title>rooms</Title>
       <LoginText>log in with your spotify premium account</LoginText>
-      <Button onClick={authorize}>
-        <IconContext.Provider value={{ color: "#1DB954", size: "5em" }}>
-          <FaSpotify />
-        </IconContext.Provider>
-      </Button>
-      <button onClick={fetchMainUserData}>get user info</button>
+      <a href="http://localhost:5678/login" target="_blank">
+        <Button>
+          <IconContext.Provider value={{ color: "#1DB954", size: "5em" }}>
+            <FaSpotify />
+          </IconContext.Provider>
+        </Button>
+      </a>
       <Link to="/home">Home</Link>
+      <button onClick={getAllUsers}>get all users</button>
+      <button onClick={fetchMainUserData}>get main user</button>
+      <button onClick={getToken}>get token</button>
+      <Link to="/room">Room</Link>
+      <Link to="/search">Search</Link>
     </Wrapper>
   );
 };

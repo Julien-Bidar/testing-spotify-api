@@ -16,8 +16,10 @@ const scopes = [
   "streaming",
 ];
 
+let token = null;
+
 const spotifyApi = new SpotifyWebApi({
-  redirectUri: "http://localhost:3000",
+  redirectUri: "http://localhost:5678/callback",
   clientId: process.env.SPOTIFY_CLIENT_ID,
   clientSecret: process.env.SPOTIFY_SECRET,
 });
@@ -43,6 +45,7 @@ const callback = (req, res) => {
     .authorizationCodeGrant(code)
     .then((data) => {
       const accessToken = data.body["access_token"];
+      token = accessToken;
       const refreshToken = data.body["refresh_token"];
       const expiresIn = data.body["expires_in"];
 
@@ -61,6 +64,7 @@ const callback = (req, res) => {
       setInterval(async () => {
         const data = await spotifyApi.refreshAccessToken();
         const accessToken = data.body["access_token"];
+        token = accessToken;
 
         console.log("The access token has been refreshed!");
         console.log("access_token:", accessToken);
@@ -79,24 +83,22 @@ const getAuthorization = async (req, res) => {
   const clientId = process.env.SPOTIFY_CLIENT_ID;
 };
 
-//------------get token without the library----------------------//
-const getTokenToFE = async (req, res, next) => {
-  const clientSecret = process.env.SPOTIFY_SECRET;
-  const clientId = process.env.SPOTIFY_CLIENT_ID;
-  const authorizationCode = req.body.code;
-  const authString = Buffer.from(clientId + ":" + clientSecret).toString(
-    "base64"
-  );
-  const response = await fetch("https://accounts.spotify.com/api/token", {
-    method: "POST",
-    headers: {
-      Authorization: `Basic ${authString}`,
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body: `grant_type=authorization_code&code=${authorizationCode}&redirect_uri=http://localhost:3000`,
-  });
-  const json = await response.json();
-  return res.send(json);
+sendAccessToken = (req, res) => {
+  try {
+    return res.status(200).json({ status: 200, accessToken: token });
+  } catch (err) {
+    return res.status(400).json({ status: 400, message: err });
+  }
 };
 
-module.exports = { login, callback, getTokenToFE };
+const getUserInfo = async (req, res) => {
+  try {
+    const me = await spotifyApi.getMe();
+    res.status(200).json({ status: 200, me: me });
+  } catch (e) {
+    console.error(e);
+    res.status(400).json({ status: 400, message: e });
+  }
+};
+
+module.exports = { login, callback, getUserInfo, sendAccessToken };

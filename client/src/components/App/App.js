@@ -6,6 +6,7 @@ import Home from "../home/home";
 import AddRoom from "../setRoom/addRoom";
 import Room from "../Room/room";
 import Search from "../search/search";
+import Player from "../Room/player";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
             <AddRoom />
           </Route>
         </Switch>
+        <Player />
       </Router>
     </>
   );

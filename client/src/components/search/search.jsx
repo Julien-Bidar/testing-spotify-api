@@ -8,6 +8,7 @@ import {
   searchRequest,
 } from "../../redux/actions/searchActions";
 import SearchResult from "./searchResults";
+import Player from "../Room/player";
 
 const Search = () => {
   const dispatch = useDispatch();

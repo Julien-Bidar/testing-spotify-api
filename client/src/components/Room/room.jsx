@@ -11,7 +11,6 @@ const Room = () => {
       <RoomHeader />
       <NowPlaying />
       <QueueItem />
-      <Player />
       <RoomFooter />
     </div>
   );
