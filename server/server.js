@@ -6,7 +6,12 @@ const app = new express();
 const port = 5678;
 
 const { login, callback, getUserInfo, sendAccessToken } = require("./handlers");
-const { addUser, getAllUsers } = require("./dbhandlers");
+const {
+  addUser,
+  getAllUsers,
+  addQueueItem,
+  getUpdatedQueue,
+} = require("./dbhandlers");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -20,8 +25,11 @@ app.get("/me", getUserInfo);
 //app.post("/spotify_access_token", getTokenToFE);
 
 //db routes
+//todo have restfull endpoints
 app.post("/adduser", addUser);
 app.get("/getallusers", getAllUsers);
+app.post("/addtoqueue", addQueueItem);
+app.get("/queue", getUpdatedQueue);
 
 app.listen(port, function (error) {
   if (error) {

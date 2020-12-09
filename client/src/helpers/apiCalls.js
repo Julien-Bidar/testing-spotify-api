@@ -1,5 +1,4 @@
-import { useSelector } from "react-redux";
-
+//-----------------------SDK player related-----------------------------//
 export const playTrack = async (queue, token) => {
   const info = queue[0];
   const uri = info[0].uri;
@@ -21,3 +20,13 @@ export const playTrack = async (queue, token) => {
   const response = await request.json();
   console.log(response);
 };
+
+//---------------------------------db fetch------------------------//
+// export const updateQueue = async (currentUser) => {
+//   const updateRequest = await fetch("/queue");
+//   const response = await updateRequest.json();
+//   const data = response.data.filter((item) => {
+//     return item.addedBy.email !== currentUser.email;
+//   });
+//   console.log(data);
+// };

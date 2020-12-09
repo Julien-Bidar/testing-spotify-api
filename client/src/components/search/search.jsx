@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { FiArrowLeft } from "react-icons/fi";
+import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   // receiveAlbums,
@@ -46,6 +48,9 @@ const Search = () => {
 
   return (
     <Wrapper>
+      <Link to="/room">
+        <FiArrowLeft />
+      </Link>
       <input type="text" value={value} onChange={handleChange} />
       <button onClick={handleclick}>search</button>
       <SearchResult />
