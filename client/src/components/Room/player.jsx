@@ -1,40 +1,43 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import SpotifyPlayer from "react-spotify-web-playback";
 import { useSelector } from "react-redux";
 import { playTrack } from "../../helpers/apiCalls";
 
 const Player = () => {
   const [offsetState, setOffsetState] = useState(0);
-  const [uri, setUri] = useState([
-    "spotify:track:4Oun2ylbjFKMPTiaSbbCih",
-    "spotify:track:4Oun2ylbjFKMPTiaSbbCih",
-  ]);
+  //const [uri, setUri] = useState(["spotify:track:4zCrOO8OAjpnmekfIxzTsl"]);
   const queue = useSelector((state) => state.queue.item);
   const accessToken = useSelector((state) => state.auth.token);
-  console.log(offsetState);
+  const [currentPlayingUri, setCurrentPlayingUri] = useState();
+  const [position, setPosition] = useState();
+  const uri = useSelector((state) =>
+    state.queue.item.map((item) => item.track.uri)
+  );
 
-  // let uri = [
-  //   "spotify:track:6b37xrsNCWYIUphFBazqD6",
-  //   "spotify:track:5I3jKRlR8WS0xYYamnAhpG",
-  // ];
   const spotifyPlayerCallback = (spotifyState) => {
     console.log(spotifyState);
     const uriTrackPlaying = spotifyState.track.uri;
-    const offset = uri.indexOf(uriTrackPlaying);
-    if (offset !== offsetState && offset !== -1) {
-      setOffsetState(offsetState + 1);
+    const currentOffset = uri.indexOf(uriTrackPlaying);
+    setPosition(spotifyState.position);
+    if (currentOffset !== -1) {
+      setOffsetState(currentOffset);
     }
-    console.log(offset);
+    if (currentPlayingUri !== uriTrackPlaying) {
+      setCurrentPlayingUri(uriTrackPlaying);
+    }
+    // if (offset !== offsetState && offset !== -1) {
+    //   setOffsetState(offsetState + 1);
+    // }
   };
 
-  useEffect(() => {
-    queue.forEach((item) => {
-      if (uri.indexOf(item.uri) === -1) {
-        setUri([uri, item.uri]);
-      }
-      console.log(uri);
-    });
-  }, []);
+  // useEffect(() => {
+  //   // queue.forEach((item) => {
+  //   //   if (uri.indexOf(item.track.uri) === -1) {
+  //   //     setUri([...uri, item.track.uri]);
+  //   //   }
+  //     console.log(uri);
+  //   });
+  // }, [setOffsetState]);
 
   if (!accessToken) {
     return null;
@@ -43,17 +46,19 @@ const Player = () => {
     //return <p>the queue is empty add a track</p>;
   }
 
-  console.log(uri);
-
   return (
-    <SpotifyPlayer
-      name="rooms"
-      token={accessToken}
-      showSaveIcon={true}
-      uris={uri}
-      callback={spotifyPlayerCallback}
-      offset={offsetState}
-    />
+    <>
+      <SpotifyPlayer
+        name="rooms"
+        token={accessToken}
+        showSaveIcon={true}
+        uris={uri}
+        callback={spotifyPlayerCallback}
+        offset={offsetState}
+        position={position}
+      />
+      {/* <button onClick={addTrack}></button> */}
+    </>
   );
 };
 

@@ -18,6 +18,14 @@ import {
 const LandingPage = () => {
   const dispatch = useDispatch();
 
+  //authorization + fetching user.
+  const login = () => {
+    let popup = window.open(
+      "http://localhost:5678/login",
+      "width=800,height=600"
+    );
+  };
+
   //fetching the main user data
   const fetchMainUserData = async () => {
     try {
@@ -62,13 +70,13 @@ const LandingPage = () => {
     <Wrapper>
       <Title>rooms</Title>
       <LoginText>log in with your spotify premium account</LoginText>
-      <a href="http://localhost:5678/login" target="_blank">
-        <Button>
-          <IconContext.Provider value={{ color: "#1DB954", size: "5em" }}>
-            <FaSpotify />
-          </IconContext.Provider>
-        </Button>
-      </a>
+      {/* <a href="http://localhost:5678/login" target="_blank"> */}
+      <Button onClick={login}>
+        <IconContext.Provider value={{ color: "#1DB954", size: "5em" }}>
+          <FaSpotify />
+        </IconContext.Provider>
+      </Button>
+      {/* </a> */}
       <Link to="/home">Home</Link>
       <button onClick={getAllUsers}>get all users</button>
       <button onClick={fetchMainUserData}>get main user</button>

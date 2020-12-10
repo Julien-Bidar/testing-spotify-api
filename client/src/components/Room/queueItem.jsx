@@ -3,8 +3,6 @@ import styled from "styled-components";
 
 const QueueItem = (props) => {
   const { item } = props;
-  console.log(item);
-  console.log(item.track);
   const trackImgSrc = item.track.album.images[2];
   const addedByImgSrc = item.addedBy.imageSrc;
   return (

@@ -13,7 +13,6 @@ const Devices = () => {
       options
     );
     const data = await request.json();
-    console.log(data);
   };
 
   return <button onClick={getDevices}>get device</button>;
