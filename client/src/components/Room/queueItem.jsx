@@ -1,13 +1,24 @@
 import React from "react";
 import styled from "styled-components";
+import { useSelector } from "react-redux";
+import { IoIosMusicalNotes } from "react-icons/io";
 
 const QueueItem = (props) => {
   const { item } = props;
+  const trackPlaying = useSelector(
+    (state) => state.player.playerState.track.id
+  );
   const trackImgSrc = item.track.album.images[2];
   const addedByImgSrc = item.addedBy.imageSrc;
   return (
     <div>
-      <Wrapper>
+      <Wrapper
+      // style={
+      //   trackPlaying === item.track.id
+      //     ? { backgroundColor: "rgba(46, 47, 49, 0.25)" }
+      //     : { backgroundColor: "none" }
+      // }
+      >
         <MusicWrap>
           <div>
             <img src={trackImgSrc.url} alt="album cover" />
@@ -16,10 +27,10 @@ const QueueItem = (props) => {
             <TrackName>{item.track.name}</TrackName>
             <p>{item.track.album.artists[0].name}</p>
           </TextWrap>
-          {/* <div>
-          <p>heart icon</p>
-        </div> */}
         </MusicWrap>
+        <NoteWrap>
+          {trackPlaying === item.track.id && <IoIosMusicalNotes />}
+        </NoteWrap>
         <ImgWrap>
           <Avatar src={addedByImgSrc} alt="" />
         </ImgWrap>
@@ -34,6 +45,12 @@ const Wrapper = styled.div`
   justify-content: space-between;
   padding: 5px 0;
   margin-left: 5px;
+`;
+
+const NoteWrap = styled.div`
+  display: flex;
+  align-items: center;
+  margin-right: 15px;
 `;
 
 const MusicWrap = styled.div`

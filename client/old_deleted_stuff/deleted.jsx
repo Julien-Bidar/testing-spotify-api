@@ -110,3 +110,26 @@
 //   `https://api.spotify.com/v1/me/player/queue?uri=${item.uri}`,
 //   options
 // );
+
+//button manual update from DB
+// const updateQueue = async () => {
+//   const updateRequest = await fetch("/queue");
+//   const response = await updateRequest.json();
+
+//   dispatch(updateQueueFromDB(response.data));
+// };
+
+// //--------------------token if method without server---//
+// useEffect(() => {
+//   const token = getTokenFromUrl();
+//   if (token) {
+//     dispatch(requestUsersInfo());
+//     const currentUserData = fetchCurrentUserData(token);
+//     if (currentUserData.err) {
+//       dispatch(receiveUserProfileError());
+//     } else {
+//       console.log(currentUserData);
+//       dispatch(receiveMainUserProfile(currentUserData));
+//     }
+//   }
+// });

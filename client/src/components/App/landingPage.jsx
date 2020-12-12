@@ -71,10 +71,18 @@ const LandingPage = () => {
     }
   };
 
+  //clear playlist DB
+  const resetDb = async () => {
+    const clearRequest = await fetch("/clearplaylist");
+    const response = await clearRequest.json();
+    console.log(response);
+  };
+
   const start = async () => {
     getToken();
     await fetchMainUserData();
     await getAllUsers();
+    resetDb();
   };
 
   return (

@@ -27,6 +27,7 @@ const {
   getAllUsers,
   addQueueItem,
   getUpdatedQueue,
+  dropPlaylist,
 } = require("./dbhandlers");
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -60,6 +61,7 @@ app.get("/getallusers", getAllUsers);
 app.post("/addtoqueue", addQueueItem);
 app.get("/queue", getUpdatedQueue);
 app.get("/saveplaylist", savePlaylist);
+app.get("/clearplaylist", dropPlaylist);
 
 server.listen(port, function (error) {
   if (error) {

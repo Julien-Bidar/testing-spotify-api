@@ -61,6 +61,7 @@ const addQueueItem = async (req, res) => {
   }
 };
 
+//not used
 const getUpdatedQueue = async (req, res) => {
   const client = await MongoClient(MONGO_URI, options);
   try {
@@ -73,9 +74,22 @@ const getUpdatedQueue = async (req, res) => {
   }
 };
 
+const dropPlaylist = async (req, res) => {
+  const client = await MongoClient(MONGO_URI, options);
+  try {
+    await client.connect();
+    const db = client.db("final_project");
+    const drop = await db.collection("queue").drop();
+    res.status(200).json({ status: 200, data: drop });
+  } catch (err) {
+    res.status(400).json({ status: 400, message: err });
+  }
+};
+
 module.exports = {
   addUser,
   getAllUsers,
   addQueueItem,
   getUpdatedQueue,
+  dropPlaylist,
 };
