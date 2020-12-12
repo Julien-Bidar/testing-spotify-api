@@ -20,10 +20,7 @@ const LandingPage = () => {
 
   //authorization + fetching user.
   const login = () => {
-    let popup = window.open(
-      "http://localhost:5678/login",
-      "width=800,height=600"
-    );
+    window.open("http://localhost:5678/login", "width=800,height=600");
   };
 
   //fetching the main user data
@@ -59,11 +56,25 @@ const LandingPage = () => {
     try {
       const req = await fetch("/token");
       const token = await req.json();
+      const expires = token.expiresIn;
       dispatch(receiveAccessToken(token.accessToken));
+      //refresh token before it expires
+      setInterval(async () => {
+        console.log("refresh ran on FE");
+        const data = await fetch("/token");
+        const token = await data.json();
+        dispatch(receiveAccessToken(token.accessToken));
+      }, (expires / 2) * 1000);
     } catch (err) {
       console.log(err);
       dispatch(receiveAccessTokenError());
     }
+  };
+
+  const start = async () => {
+    getToken();
+    await fetchMainUserData();
+    await getAllUsers();
   };
 
   return (
@@ -76,16 +87,26 @@ const LandingPage = () => {
           <FaSpotify />
         </IconContext.Provider>
       </Button>
-      {/* </a> */}
-      <Link to="/home">Home</Link>
-      <button onClick={getAllUsers}>get all users</button>
-      <button onClick={fetchMainUserData}>get main user</button>
-      <button onClick={getToken}>get token</button>
-      <Link to="/room">Room</Link>
-      <Link to="/search">Search</Link>
+      <StyledLink to="/room">
+        <ButtonStart onClick={start}>Start</ButtonStart>
+      </StyledLink>
+      {/* <Link to="/search">Search</Link> */}
     </Wrapper>
   );
 };
+
+const StyledLink = styled(Link)`
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+  padding: 15px;
+`;
+
+const ButtonStart = styled.button`
+  border: none;
+  border-radius: 5px;
+  margin-top: 45px;
+`;
 
 const Wrapper = styled.div`
   height: 100vh;

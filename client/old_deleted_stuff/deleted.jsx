@@ -100,3 +100,13 @@
 //   });
 //   console.log(newUsersArray);
 // }
+
+//------------------------------addToQueueQuery-------------------------------//
+// const options = {
+//   method: "POST",
+//   headers: { Authorization: `Bearer ${accessToken}` },
+// };
+// await fetch(
+//   `https://api.spotify.com/v1/me/player/queue?uri=${item.uri}`,
+//   options
+// );

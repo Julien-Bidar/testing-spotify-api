@@ -1,11 +1,24 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
+import { ImSearch } from "react-icons/im";
+import { IconContext } from "react-icons";
 
 const RoomHeader = () => {
   const imgSrc = useSelector((state) => state.users.currentUser.imageSrc);
   return (
     <Wrapper>
+      <StyledLink to="/search">
+        <SearchWrap>
+          <IconContext.Provider value={{ color: "#2e2f31", size: "1.1em" }}>
+            <ImSearch />
+            {/* <Link to="/addroom">
+          <FaPlus />
+        </Link> */}
+          </IconContext.Provider>
+        </SearchWrap>
+      </StyledLink>
       <ImgWrap>
         <Avatar src={imgSrc} alt="" />
       </ImgWrap>
@@ -13,9 +26,28 @@ const RoomHeader = () => {
   );
 };
 
+const StyledLink = styled(Link)`
+  color: white;
+  text-decoration: none;
+  padding: 5px;
+`;
+
+const SearchWrap = styled.div`
+  width: 150px;
+  height: 25px;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+  margin-top: 10px;
+  border-radius: 15px;
+  padding: 7px;
+`;
+
 const Wrapper = styled.div`
   display: flex;
   justify-content: flex-end;
+  align-items: center;
   padding-bottom: 10px;
   background-color: #2e2f31;
 `;

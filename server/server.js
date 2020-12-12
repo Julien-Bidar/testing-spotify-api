@@ -15,7 +15,13 @@ const io = socketio(server, {
 });
 const port = 5678;
 
-const { login, callback, getUserInfo, sendAccessToken } = require("./handlers");
+const {
+  login,
+  callback,
+  getUserInfo,
+  savePlaylist,
+  sendAccessToken,
+} = require("./handlers");
 const {
   addUser,
   getAllUsers,
@@ -39,7 +45,11 @@ app.get("/me", getUserInfo);
 io.on("connection", (socket) => {
   console.log("connected!!!");
   socket.on("updateQueue", ({ item, user }) => {
+    console.log("**********server");
     io.emit("updateQueue", { item, user });
+  });
+  socket.on("disconnect", (reason) => {
+    console.log("user disconnected");
   });
 });
 
@@ -49,6 +59,7 @@ app.post("/adduser", addUser);
 app.get("/getallusers", getAllUsers);
 app.post("/addtoqueue", addQueueItem);
 app.get("/queue", getUpdatedQueue);
+app.get("/saveplaylist", savePlaylist);
 
 server.listen(port, function (error) {
   if (error) {

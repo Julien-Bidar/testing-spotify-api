@@ -8,3 +8,7 @@ export const updateQueueFromDB = (data) => ({
   type: "UPDATE_QUEUE",
   data,
 });
+
+export const clearQueue = () => ({
+  type: "CLEAR_QUEUE",
+});

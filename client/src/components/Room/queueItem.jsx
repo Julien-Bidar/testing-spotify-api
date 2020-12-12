@@ -33,6 +33,7 @@ const Wrapper = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 5px 0;
+  margin-left: 5px;
 `;
 
 const MusicWrap = styled.div`

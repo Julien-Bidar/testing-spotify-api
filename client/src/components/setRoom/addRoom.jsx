@@ -1,28 +1,61 @@
-import React from "react";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import Header from "../home/header";
 import { IoIosMusicalNotes } from "react-icons/io";
 import { IconContext } from "react-icons";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import { addSession } from "../../redux/actions/sessionActions";
+import { v4 as uuidv4 } from "uuid";
 
 const AddRoom = () => {
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const currentUserName = useSelector(
+    (state) => state.users.currentUser.display_name
+  );
+  const [value, setValue] = useState("");
+
+  const handleChange = (e) => {
+    setValue(e.target.value);
+  };
+
+  const handleSubmit = () => {
+    const id = uuidv4();
+    console.log(id);
+    const data = {
+      sessionName: value,
+      id: id,
+      createdBy: currentUserName,
+    };
+    dispatch(addSession(data));
+    history.push(`/room/${id}`);
+    setValue("");
+  };
+
   return (
     <>
       <Header />
       <Wrapper>
         <InputWrap>
           <Text>1 - Enter the name of your collaborative playlist</Text>
-          <Input type="text" name="playlist name" />
+          <Input
+            type="text"
+            name="playlist name"
+            onChange={handleChange}
+            value={value}
+            required
+          />
         </InputWrap>
-        <InputWrap>
+        {/* <InputWrap>
           <Text>2 - Invite friends to join</Text>
           <Input type="email" name="invite friends" />
-        </InputWrap>
+        </InputWrap> */}
         <SubmitWrap>
           <IconContext.Provider value={{ color: "#ffffff", size: "2em" }}>
-            <Link to="/room">
+            <Button onClick={handleSubmit}>
               <IoIosMusicalNotes />
-            </Link>
+            </Button>
           </IconContext.Provider>
         </SubmitWrap>
       </Wrapper>
@@ -32,6 +65,12 @@ const AddRoom = () => {
 
 const SubmitWrap = styled.div`
   padding-top: 180px;
+`;
+
+const Button = styled.button`
+  background-color: transparent;
+  outline: none;
+  border: none;
 `;
 
 const Input = styled.input`

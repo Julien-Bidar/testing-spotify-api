@@ -21,6 +21,20 @@ export const playTrack = async (queue, token) => {
   console.log(response);
 };
 
+// export const fetchCurrentUserData = async () => {
+//   dispatch(requestUsersInfo());
+//   const options = {
+//     headers: { Authorization: `Bearer ${accessToken}` },
+//   };
+//   try {
+//     const request = await fetch("https://api.spotify.com/v1/me", options);
+//     const data = await request.json();
+//     dispatch(receiveMainUserProfile(data));
+//   } catch (err) {
+//     dispatch(receiveUserProfileError());
+//   }
+// };
+
 //---------------------------------db fetch------------------------//
 // export const updateQueue = async (currentUser) => {
 //   const updateRequest = await fetch("/queue");

@@ -54,7 +54,7 @@ const addQueueItem = async (req, res) => {
     await client.connect();
     const db = client.db("final_project");
     const addTrack = await db.collection("queue").insertOne(item);
-    assert.strictEqual(1, addTrack.instertedCount);
+    // assert.strictEqual(1, addTrack.instertedCount);
     res.status(201).json({ status: 201, data: item });
   } catch (err) {
     res.status(400).json({ status: 400, message: err });
@@ -73,4 +73,9 @@ const getUpdatedQueue = async (req, res) => {
   }
 };
 
-module.exports = { addUser, getAllUsers, addQueueItem, getUpdatedQueue };
+module.exports = {
+  addUser,
+  getAllUsers,
+  addQueueItem,
+  getUpdatedQueue,
+};

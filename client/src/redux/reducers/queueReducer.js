@@ -1,5 +1,5 @@
 const initialState = {
-  item: [],
+  items: [],
   playing: false,
   status: "idle",
 };
@@ -10,17 +10,24 @@ export default function queueReducer(state = initialState, action) {
       const addedBy = action.user;
       const track = action.data;
       const item = { track, addedBy };
-      const newItem = [...state.item, item];
+      //const newItem = ;
       return {
         ...state,
-        item: newItem,
+        items: [...state.items, item],
         status: "idle",
       };
     }
     case "UPDATE_QUEUE": {
       return {
         ...state,
-        item: action.data,
+        items: action.data,
+        status: "idle",
+      };
+    }
+    case "CLEAR_QUEUE": {
+      return {
+        ...state,
+        items: [],
         status: "idle",
       };
     }

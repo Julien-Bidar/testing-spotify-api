@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import styled from "styled-components";
 
 const Header = () => {
-  const imgSrc = useSelector((state) => state.users.information.imageSrc);
+  const imgSrc = useSelector((state) => state.users.currentUser.imageSrc);
   return (
     <Wrapper>
       <ImgWrap>

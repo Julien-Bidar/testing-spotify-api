@@ -1,6 +1,11 @@
 require("../client/node_modules/dotenv").config();
 const fetch = require("isomorphic-fetch");
 const SpotifyWebApi = require("spotify-web-api-node");
+const { MongoClient } = require("mongodb");
+const assert = require("assert");
+
+const { MONGO_URI } = process.env;
+const options = { useNewUrlParser: true, useUnifiedTopology: true };
 
 //------------auth process--------------------------------------//
 const scopes = [
@@ -14,9 +19,11 @@ const scopes = [
   "user-library-modify",
   "app-remote-control",
   "streaming",
+  "playlist-modify-public",
 ];
 
 let token = null;
+let expires = null;
 
 const spotifyApi = new SpotifyWebApi({
   redirectUri: "http://localhost:5678/callback",
@@ -34,8 +41,6 @@ const callback = (req, res) => {
   const code = req.query.code;
   const state = req.query.state;
 
-  console.log("state :", state);
-
   if (error) {
     console.error("Callback error", error);
     res.send(`Callback Error: ${error}`);
@@ -48,6 +53,7 @@ const callback = (req, res) => {
       token = accessToken;
       const refreshToken = data.body["refresh_token"];
       const expiresIn = data.body["expires_in"];
+      expires = expiresIn;
 
       spotifyApi.setAccessToken(accessToken);
       spotifyApi.setRefreshToken(refreshToken);
@@ -59,7 +65,7 @@ const callback = (req, res) => {
         `Sucessfully retreived access token. Expires in ${expiresIn} s.`
       );
       console.log("access token", accessToken);
-      res.json({ token: accessToken });
+      res.json({ message: "connected you can now close this window" });
 
       setInterval(async () => {
         const data = await spotifyApi.refreshAccessToken();
@@ -83,9 +89,11 @@ const getAuthorization = async (req, res) => {
   const clientId = process.env.SPOTIFY_CLIENT_ID;
 };
 
-sendAccessToken = (req, res) => {
+const sendAccessToken = (req, res) => {
   try {
-    return res.status(200).json({ status: 200, accessToken: token });
+    return res
+      .status(200)
+      .json({ status: 200, accessToken: token, expiresIn: expires });
   } catch (err) {
     return res.status(400).json({ status: 400, message: err });
   }
@@ -101,4 +109,50 @@ const getUserInfo = async (req, res) => {
   }
 };
 
-module.exports = { login, callback, getUserInfo, sendAccessToken };
+const savePlaylist = async (req, res) => {
+  const client = await MongoClient(MONGO_URI, options);
+
+  // retrieving uri from db
+  let playlist = [];
+  try {
+    await client.connect();
+    const db = client.db("final_project");
+    const update = await db
+      .collection("queue")
+      .find({})
+      .project({ "track.uri": 1 })
+      .toArray();
+    update.forEach((item) => {
+      playlist.push(item.track.uri);
+    });
+
+    //creating and adding track to a new spotify playlist:
+    let playlistId;
+    spotifyApi
+      .createPlaylist("API Test", {
+        description: "let's see if it works",
+        public: true,
+      })
+      .then((data) => {
+        console.log(data.body.id);
+        playlistId = data.body.id;
+        spotifyApi
+          .addTracksToPlaylist(playlistId, playlist)
+          .then((data) => console.log(data))
+          .catch((err) => console.log(err));
+      })
+      .catch((err) => console.log(err));
+
+    res.status(200).json({ status: 201, message: "playlist created" });
+  } catch (err) {
+    res.status(400).json({ status: 400, message: err });
+  }
+};
+
+module.exports = {
+  login,
+  callback,
+  getUserInfo,
+  savePlaylist,
+  sendAccessToken,
+};
