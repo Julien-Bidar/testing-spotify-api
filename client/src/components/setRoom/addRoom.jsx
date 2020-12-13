@@ -12,7 +12,7 @@ const AddRoom = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const currentUserName = useSelector(
-    (state) => state.users.currentUser.display_name
+    (state) => state.users.currentUser.fullName
   );
   const [value, setValue] = useState("");
 
@@ -22,12 +22,12 @@ const AddRoom = () => {
 
   const handleSubmit = () => {
     const id = uuidv4();
-    console.log(id);
     const data = {
       sessionName: value,
       id: id,
       createdBy: currentUserName,
     };
+    console.log(data);
     dispatch(addSession(data));
     history.push(`/room/${id}`);
     setValue("");

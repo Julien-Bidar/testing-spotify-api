@@ -1,12 +1,22 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 import { ImSearch } from "react-icons/im";
 import { IconContext } from "react-icons";
 
 const RoomHeader = () => {
   const imgSrc = useSelector((state) => state.users.currentUser.imageSrc);
+  // //sessionAttempt
+  // const history = useHistory();
+  // const params = useParams();
+  // const id = params.id;
+
+  // //sessionAttempt
+  // const handleClick = () => {
+  //   history.push(`/search/${id}`);
+  // };
+
   return (
     <Wrapper>
       <StyledLink to="/search">
@@ -25,6 +35,12 @@ const RoomHeader = () => {
     </Wrapper>
   );
 };
+
+const Button = styled.button`
+  background-color: transparent;
+  border: none;
+  outline: none;
+`;
 
 const StyledLink = styled(Link)`
   color: white;

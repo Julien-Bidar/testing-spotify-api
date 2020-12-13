@@ -6,7 +6,8 @@ import styled from "styled-components";
 import { FaPlus } from "react-icons/fa";
 import io from "socket.io-client";
 import { v4 as uuidv4 } from "uuid";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
+import { updateSessionQueue } from "../../redux/actions/sessionActions";
 
 const socket = io.connect("http://localhost:5678");
 
@@ -17,9 +18,20 @@ const SearchResult = () => {
   const playerState = useSelector((state) => state.player.playerState);
   const queue = useSelector((state) => state.queue.items);
   const history = useHistory();
+  const params = useParams();
+  const sessionId = params.id;
 
-  const progressMS = playerState.progressMS;
-  const durationMS = playerState.track.durationMS;
+  //------------------------------------------sessionAttempt
+  // const progressMS = playerState.progressMS;
+  // const durationMS = playerState.track.durationMS;
+  // useEffect(() => {
+  //   socket.on("updateSessionQueue", { item, user, sessionId });
+  //   dispatch(updateSessionQueue(item, user, sessionId));
+
+  //   return () => {
+  //     socket.removeListener("updateSessionQueue");
+  //   };
+  // }, []);
 
   useEffect(() => {
     socket.on("updateQueue", ({ item, user }) => {

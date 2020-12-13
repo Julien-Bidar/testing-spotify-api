@@ -8,8 +8,10 @@ import AddRoom from "../setRoom/addRoom";
 import Room from "../Room/room";
 import Search from "../search/search";
 import Player from "../Room/player";
+import { useSelector } from "react-redux";
 
 function App() {
+  const queue = useSelector((state) => state.queue.items);
   return (
     <>
       <Router>
@@ -21,16 +23,19 @@ function App() {
           <Route exact path="/home">
             <Home />
           </Route>
-          <Route exact path="/room">
+          {/* sessionAttempt */}
+          <Route exact path="/room/">
             <Room />
           </Route>
-          <Route exact path="/search">
+          {/* sessionAttempt */}
+          <Route exact path="/search/">
             <Search />
           </Route>
           <Route exact path="/addroom">
             <AddRoom />
           </Route>
         </Switch>
+        {/* sessionAttempt */}
         <Player />
       </Router>
     </>

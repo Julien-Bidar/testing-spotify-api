@@ -1,9 +1,6 @@
 const initialState = {
-  id: null,
-  name: null,
-  createdBy: null,
-  users: [],
-  queue: [],
+  rooms: [],
+  status: "idle",
 };
 
 export default function sessionReducer(state = initialState, action) {
@@ -11,9 +8,23 @@ export default function sessionReducer(state = initialState, action) {
     case "ADD_SESSION": {
       return {
         ...state,
-        id: action.data.id,
-        name: action.data.name,
-        createdBy: action.data.currentUser,
+        rooms: [...state.rooms, action.data],
+        status: "idle",
+      };
+    }
+    case "UPDATE_SESSION_QUEUE": {
+      const addedBy = action.user;
+      const track = action.data;
+      const item = { addedBy, track };
+      const id = action.id;
+      const items = state.rooms?.items;
+      //finding corresponding id
+      let updatedRoom = state.rooms.filter((room) => room.id === id);
+      updatedRoom = { ...updatedRoom, items: [...items, item] };
+      return {
+        ...state,
+        rooms: [...state.rooms, updatedRoom],
+        status: "idle",
       };
     }
     default: {

@@ -5,6 +5,12 @@ import { IoIosMusicalNotes } from "react-icons/io";
 
 const QueueItem = (props) => {
   const { item } = props;
+  //sessionAttempt
+  // const trackPlaying = useSelector((state) => {
+  //   if (state.player.playerState.track.id) {
+  //     return state.player.playerState.track.id;
+  //   }
+  // });
   const trackPlaying = useSelector(
     (state) => state.player.playerState.track.id
   );

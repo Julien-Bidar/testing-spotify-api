@@ -14,7 +14,7 @@ const Home = () => {
       <Wrapper>
         <Text>
           there is no active room at the moment activate one and invite friends
-          by pressin the + icon below
+          by pressing the + icon below
         </Text>
       </Wrapper>
       <Footer />

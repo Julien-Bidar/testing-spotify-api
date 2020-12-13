@@ -98,7 +98,9 @@ const LandingPage = () => {
       <StyledLink to="/room">
         <ButtonStart onClick={start}>Start</ButtonStart>
       </StyledLink>
-      {/* <Link to="/search">Search</Link> */}
+      {/* <StyledLink to="/home">
+        <ButtonStart onClick={start}>Home</ButtonStart>
+      </StyledLink> */}
     </Wrapper>
   );
 };
@@ -113,7 +115,8 @@ const StyledLink = styled(Link)`
 const ButtonStart = styled.button`
   border: none;
   border-radius: 5px;
-  margin-top: 45px;
+  //sessionAttempt
+  margin-top: 15px;
 `;
 
 const Wrapper = styled.div`

@@ -8,7 +8,7 @@ const Footer = () => {
   return (
     <Wrapper>
       <IconContext.Provider value={{ color: "#ffffff", size: "2em" }}>
-        <Link to="./room/add">
+        <Link to="/addroom">
           <FaPlus />
         </Link>
       </IconContext.Provider>
